@@ -26,26 +26,26 @@ make_path("db");
 $FEMALE_PCT = 0.5; # 50%
 
 my $bDownload = 0;
-my $bUser = 0;
 my $bHelp= 0;
+my $bRandom= 0;
 my $bInteractive = 0;
 my $iShuffleMode =0;
 
 GetOptions(
 	'mode=i' => \$iShuffleMode,
 	'download!' => \$bDownload,
-	'usernames!'     => \$bUser,
+	'random!'     => \$bRandom,
 	'interactive!'     => \$bInteractive,
 	'help!'     => \$bHelp,
 ) or die "Incorrect usage!\n";
 
-if( $bHelp ) {
-	print "Common on, it's really not that hard.\n";
-} 
 
-if ($#ARGV != 0 ) {
-	print "Usage: namegen.pl [-d] <# of names>\n";
-	print "-u \tgenerate usernames";
+if ($#ARGV != 0 or $bHelp ) {
+	print "Usage: namegen.pl <# of names>\n";
+	print "-m \tselect mode\n";
+	print "-d \tdownload the database\n";
+	print "-i \tinteractive mode\n";
+	print "-r \trandomly select a mode\n";
 	exit 1;
 }
 $num_names = $ARGV[0];
@@ -117,7 +117,11 @@ sub printList{
 		if( $bInteractive ){
 			print sprintf("%-5s","[$i]");
 		}
-		if( $bUser) {
+	
+			if($bRandom){
+				$max = 10;
+				$iShuffleMode = int(rand($max));
+			}
 			switch($iShuffleMode){
 				case 1 { $tStr = $fname. ".". $lname}
 				case 2 { $tStr = $fname. ".". $lname; $tStr = lc($tStr)}
@@ -125,12 +129,13 @@ sub printList{
 				case 4 { $tStr = $fname. "-". $lname; $tStr = lc($tStr)}
 				case 5 { $tStr = $fname. "". $lname}
 				case 6 { $tStr = $fname. "". $lname; $tStr = lc($tStr)}
-				case 7 { $tStr = $wiki->next(). "." .$wiki->next }
-				else {  $tStr = $wiki->next()}
+				case 7 { $tStr = $wiki->next()}
+				case 8 { $tStr = $wiki->next(); $tStr = lc($tStr) }
+				case 9 { $tStr = $wiki->next(). "." .$wiki->next }
+				case 10 { $tStr = $wiki->next(). "." .$wiki->next ; $tStr = lc($tStr)}
+				else {  $tStr = "$fname $lname" } 
 			}
-		}else{
-			$tStr ="$fname $lname";
-		}
+	
 		print $tStr ."\n";
 		if($bInteractive){
 			push(@results, $tStr)
@@ -149,6 +154,7 @@ sub download{
 	print "Done.\n";
 }
 
+# from: https://github.com/carterpage/census-name-generator
 sub makeNameArray {
 	$file = $_[0];
 	my @names;
