@@ -91,7 +91,7 @@ if($bInteractive){
 			if( $userword eq "q"){
 				exit 0;
 			}
-			if($userword eq "n" ){
+			if($userword eq "n" or $userword eq "" ){
 				print "\n";
 				last;
 			}
