@@ -27,7 +27,37 @@ Usage: namegen.pl <# of names>
 -r 	randomly select a mode
 ```
 
-## Modes
+### Example
+
+```
+> namegen -r 5
+  reclinem
+  daniel-laroche
+  Lillie-Nakagawa
+  Melissa.Owens
+  Dorothy-Nichols
+```
+
+### Interactive mode
+
+```
+>namegen -i 5
+[0]  Dale Daniel
+[1]  Catherine Hussain
+[2]  Claude Hyler
+[3]  Paul Pennington
+[4]  Jammie Dallas
+
+Enter result to copy to clipboard [0-9|q|n]:
+```
+
+```
+n    generates new data
+0-9  enter a valid number
+q    quit
+```
+
+### Modes
 
 | Mode | Example    |
 | ---  |  ---       |
