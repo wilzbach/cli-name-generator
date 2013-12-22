@@ -51,6 +51,7 @@ Usage: namegen.pl <# of names>
 Enter result to copy to clipboard [0-9|q|n]:
 ```
 
+Options:
 ```
 n    generates new data
 0-9  enter a valid number
