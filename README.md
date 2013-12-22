@@ -3,13 +3,31 @@ cli-name-generator
 
 generates random usernames
 
-# Dependencies
+## Dependencies
 
 * you will need ```xsel``` for the interactive mode
 * you will need some Perl modules 
 * currently unix runs under unix system
 
-# Modes
+## Install
+
+* this will download the census data + wiktionary
+
+```
+namengen.pl -d 1
+```
+
+## Syntax
+
+```
+Usage: namegen.pl <# of names>
+-m 	select mode
+-d 	download the database
+-i 	interactive mode
+-r 	randomly select a mode
+```
+
+## Modes
 
 | Mode | Example    |
 | ---  |  ---       |
@@ -27,6 +45,6 @@ generates random usernames
 
 To be continued.
 
-# History
+## History
 
 This is a total rewrite of https://github.com/carterpage/census-name-generator
