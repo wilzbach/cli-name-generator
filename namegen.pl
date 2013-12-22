@@ -9,6 +9,7 @@ use File::RandomLine;
 use File::Path qw(make_path);
 use Getopt::Long;
 use Switch;
+use Term::ANSIColor;
 
 # File::RandomLine must be installed!
 $WIKTIONARY_URL = "http://dumps.wikimedia.org/enwiktionary/20131217/enwiktionary-20131217-all-titles.gz";
@@ -119,24 +120,26 @@ sub printList{
 		}
 	
 			if($bRandom){
-				$max = 10;
-				$iShuffleMode = int(rand($max));
+				# do not include modes with whitespace
+				$max = 10-1;
+				$iShuffleMode = int(rand($max))+1;
 			}
 			switch($iShuffleMode){
-				case 1 { $tStr = $fname. ".". $lname}
-				case 2 { $tStr = $fname. ".". $lname; $tStr = lc($tStr)}
-				case 3 { $tStr = $fname. "-". $lname}
-				case 4 { $tStr = $fname. "-". $lname; $tStr = lc($tStr)}
-				case 5 { $tStr = $fname. "". $lname}
-				case 6 { $tStr = $fname. "". $lname; $tStr = lc($tStr)}
-				case 7 { $tStr = $wiki->next()}
-				case 8 { $tStr = $wiki->next(); $tStr = lc($tStr) }
-				case 9 { $tStr = $wiki->next(). "." .$wiki->next }
-				case 10 { $tStr = $wiki->next(). "." .$wiki->next ; $tStr = lc($tStr)}
-				else {  $tStr = "$fname $lname" } 
+				case 1 { $tStr = colored( $fname, 'magenta'). ".". colored($lname, 'blue')}
+				case 2 { $tStr = colored( $fname, 'magenta'). ".". colored($lname, 'blue') ;$tStr = lc($tStr)}
+				case 3 {  $tStr = colored( $fname, 'magenta'). "-". colored($lname, 'blue') }
+				case 4 {  $tStr = colored( $fname, 'magenta'). "-". colored($lname, 'blue') ; $tStr = lc($tStr)}
+				case 5 {  $tStr = colored( $fname, 'magenta'). "". colored($lname, 'blue') }
+				case 6 {  $tStr = colored( $fname, 'magenta'). "". colored($lname, 'blue') ; $tStr = lc($tStr)}
+				case 7 { $tStr = colored($wiki->next(), 'green')}
+				case 8 {$tStr = colored( $wiki->next(), 'green'). "". colored($wiki->next(), 'yellow') ; $tStr = lc($tStr) }
+				case 9 { $tStr = colored( $wiki->next(), 'green'). "". colored($wiki->next(), 'yellow')  }
+				case 10 { $tStr = colored( $wiki->next(), 'green'). "". colored($wiki->next(), 'yellow') ; $tStr = lc($tStr)}
+				else {   $tStr = colored( $fname, 'magenta'). " ". colored($lname, 'blue')  } 
 			}
 	
-		print $tStr ."\n";
+		print "$tStr\n";
+		#print $tStr ."\n";
 		if($bInteractive){
 			push(@results, $tStr)
 		}
