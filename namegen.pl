@@ -22,6 +22,8 @@ $LAST_NAME_FILE =$FindBin::Bin."/db/lname.dat";
 $FEMALE_FIRST_NAME_FILE = $FindBin::Bin."/db/fnamef.dat";
 $MALE_FIRST_NAME_FILE = $FindBin::Bin ."/db/fnamem.dat";
 $WIKTIONARY_NAME_FILE = $FindBin::Bin . "/db/enwiktionary-all-titles.filtered";
+$ADJECTIVE_FILE= $FindBin::Bin . "/db-own/adjectives.txt";
+$NOUN_FILE= $FindBin::Bin . "/db-own/nouns2.txt";
 make_path("db");
 
 $FEMALE_PCT = 0.5; # 50%
@@ -64,7 +66,7 @@ if ($bDownload) {
 	# extract and unpack wiki
 	print "Extracting wikionary data\n";
 	system("gunzip $WIKTIONARY_NAME_FILE"."raw.gz");
-	system("egrep -v [^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ] $WIKTIONARY_NAME_FILE"."raw > $WIKTIONARY_NAME_FILE ");
+	system("egrep -v '[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ]' $WIKTIONARY_NAME_FILE"."raw > $WIKTIONARY_NAME_FILE ");
 	system("rm $WIKTIONARY_NAME_FILE"."raw");
 }
 
@@ -73,6 +75,8 @@ my @fnamefs = makeNameArray($FEMALE_FIRST_NAME_FILE);
 my @fnamems = makeNameArray($MALE_FIRST_NAME_FILE);
 
 my $wiki = File::RandomLine->new($WIKTIONARY_NAME_FILE);
+my $adj= File::RandomLine->new($ADJECTIVE_FILE);
+my $noun= File::RandomLine->new($NOUN_FILE);
 
 
 
@@ -135,6 +139,8 @@ sub printList{
 				case 8 {$tStr = colored( $wiki->next(), 'green'). "". colored($wiki->next(), 'yellow') ; $tStr = lc($tStr) }
 				case 9 { $tStr = colored( $wiki->next(), 'green'). "". colored($wiki->next(), 'yellow')  }
 				case 10 { $tStr = colored( $wiki->next(), 'green'). "". colored($wiki->next(), 'yellow') ; $tStr = lc($tStr)}
+				case 11 { $tStr = colored( $adj->next(), 'green'). "". colored($noun->next(), 'yellow') ;}
+				case 12 { $tStr = colored( $adj->next(), 'green'). "". colored($noun->next(), 'yellow') ; } 
 				else {   $tStr = colored( $fname, 'magenta'). " ". colored($lname, 'blue')  } 
 			}
 	
