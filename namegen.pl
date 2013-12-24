@@ -160,7 +160,7 @@ sub printList{
 			case 9 { $tStr = &colorwrap( $wiki->next(), 'green'). "". &colorwrap($wiki->next(), 'yellow')  }
 			case 10 { $tStr = &colorwrap( $wiki->next(), 'green'). "". &colorwrap($wiki->next(), 'yellow') ; $tStr = lc($tStr)}
 			case 11 { $tStr = &colorwrap( $adj->next(), 'green'). "". &colorwrap($noun->next(), 'yellow') ;}
-			case 12 { $tStr = &colorwrap( $adj->next(), 'green'). "". &colorwrap($lname, 'yellow') ; } 
+			case 12 { $tStr = &colorwrap( $adj->next(), 'green'). "". &colorwrap(lc($lname), 'yellow') ; } 
 			else {   $tStr = &colorwrap( $fname, 'magenta'). " ". &colorwrap($lname, 'blue')  } 
 		}
 
