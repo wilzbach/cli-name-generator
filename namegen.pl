@@ -34,7 +34,6 @@ my $bRandom= 0;
 my $bInteractive = 0;
 my $iShuffleMode =0;
 my $bColorless = 0;
-my $bSpeed = 0;
 
 GetOptions(
 	'mode=i' => \$iShuffleMode,
@@ -42,7 +41,6 @@ GetOptions(
 	'random!'     => \$bRandom,
 	'interactive!'     => \$bInteractive,
 	'colorless!'     => \$bColorless,
-	'speed!'     => \$bSpeed,
 	'help!'     => \$bHelp,
 ) or die "Incorrect usage!\n";
 
@@ -53,7 +51,6 @@ if ($#ARGV != 0 or $bHelp ) {
 	print "-d \tdownload the database\n";
 	print "-i \tinteractive mode\n";
 	print "-r \trandomly select a mode\n";
-	print "-s \tdo not load in memory -> reduce startup time.\n";
 	exit 1;
 }
 $num_names = $ARGV[0];
