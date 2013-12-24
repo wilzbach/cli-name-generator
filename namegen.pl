@@ -69,36 +69,29 @@ if ($bDownload) {
 	download($FIRST_NAME_MALE_URL, $MALE_FIRST_NAME_FILE.".raw", "male first name census data");
 	print "Converting census data\n";
 	# Makes first letter upper, rest lowercase
-	system("cat $LAST_NAME_FILE".".raw | cut -f 1 -d ' ' | tr '[:upper:]' '[:lower:]'  | awk '{ print toupper(substr(\$0, 1, 1)) substr(\$0, 2) }'> $LAST_NAME_FILE");
-	system("cat $MALE_FIRST_NAME_FILE".".raw | cut -f 1 -d ' ' | tr '[:upper:]' '[:lower:]' | awk '{ print toupper(substr(\$0, 1, 1)) substr(\$0, 2) }'  > $MALE_FIRST_NAME_FILE");
-	system("cat $FEMALE_FIRST_NAME_FILE".".raw | cut -f 1 -d ' ' | tr '[:upper:]' '[:lower:]' | awk '{ print toupper(substr(\$0, 1, 1)) substr(\$0, 2) }'> $FEMALE_FIRST_NAME_FILE");
+	#system("cat $LAST_NAME_FILE".".raw | cut -f 1 -d ' ' | tr '[:upper:]' '[:lower:]'  | awk '{ print toupper(substr(\$0, 1, 1)) substr(\$0, 2) }'> $LAST_NAME_FILE");
+	#system("cat $MALE_FIRST_NAME_FILE".".raw | cut -f 1 -d ' ' | tr '[:upper:]' '[:lower:]' | awk '{ print toupper(substr(\$0, 1, 1)) substr(\$0, 2) }'  > $MALE_FIRST_NAME_FILE");
+	#system("cat $FEMALE_FIRST_NAME_FILE".".raw | cut -f 1 -d ' ' | tr '[:upper:]' '[:lower:]' | awk '{ print toupper(substr(\$0, 1, 1)) substr(\$0, 2) }'> $FEMALE_FIRST_NAME_FILE");
+	
+	makeNameArray($LAST_NAME_FILE.".raw", $LAST_NAME_FILE);
+	makeNameArray($FEMALE_FIRST_NAME_FILE.".raw", $FEMALE_FIRST_NAME_FILE);
+	makeNameArray($MALE_FIRST_NAME_FILE.".raw", $MALE_FIRST_NAME_FILE);
+
 	# go own to download wiktionary
-	download($WIKTIONARY_URL, $WIKTIONARY_NAME_FILE . "raw.gz", "Wiktionary name dump. [takes a while]");
+	download($WIKTIONARY_URL, $WIKTIONARY_NAME_FILE . ".raw.gz", "Wiktionary name dump. [takes a while]");
 	# extract and unpack wiki
 	print "Extracting wikionary data\n";
-	system("gunzip $WIKTIONARY_NAME_FILE"."raw.gz");
-	system("egrep -v '[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ]' $WIKTIONARY_NAME_FILE"."raw > $WIKTIONARY_NAME_FILE ");
-	system("rm $WIKTIONARY_NAME_FILE"."raw");
+	system("gunzip $WIKTIONARY_NAME_FILE".".raw.gz");
+	system("egrep -v '[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ]' $WIKTIONARY_NAME_FILE".".raw > $WIKTIONARY_NAME_FILE ");
+	system("rm $WIKTIONARY_NAME_FILE".".raw");
 }
 
-# use in memory storage if you require fast output of n > 100000 data
-# it takes about 3 secs with memory storage
-my @lnames,my @fnamefs, my @fnamems,my @wikis, my @nouns, my @adjs;
-if (! $bSpeed ){
-	@lnames = makeNameArray($LAST_NAME_FILE.".raw");
-	@fnamefs = makeNameArray($FEMALE_FIRST_NAME_FILE.".raw");
-	@fnamems = makeNameArray($MALE_FIRST_NAME_FILE.".raw");
-	@wikis= makeArrayFile($WIKTIONARY_NAME_FILE);
-	@nouns= makeArrayFile($NOUN_FILE);
-	@adjs= makeArrayFile($ADJECTIVE_FILE);
-}
-
-my $Llnames= File::RandomLine->new($LAST_NAME_FILE);
-my $Lfnamems= File::RandomLine->new($MALE_FIRST_NAME_FILE);
-my $Lfnamefs = File::RandomLine->new($FEMALE_FIRST_NAME_FILE);
-my $Lwiki = File::RandomLine->new($WIKTIONARY_NAME_FILE);
-my $Ladj= File::RandomLine->new($ADJECTIVE_FILE);
-my $Lnoun= File::RandomLine->new($NOUN_FILE);
+my $lnames= File::RandomLine->new($LAST_NAME_FILE);
+my $fnamems= File::RandomLine->new($MALE_FIRST_NAME_FILE);
+my $fnamefs = File::RandomLine->new($FEMALE_FIRST_NAME_FILE);
+my $wiki = File::RandomLine->new($WIKTIONARY_NAME_FILE);
+my $adj= File::RandomLine->new($ADJECTIVE_FILE);
+my $noun= File::RandomLine->new($NOUN_FILE);
 
 
 
@@ -144,15 +137,10 @@ sub colorwrap(){
 sub printList{
 	for($i = 0 ; $i < $num_names; ++$i) {
 			# Last name
-		$lname = &wrapper_array(2); 
+		$lname = $lnames->next(); 
 
 		# Male or female?
-		$fname = (rand(1) > $FEMALE_PCT) ? &wrapper_array(1): &wrapper_array(2);
-
-		# other variables: names, adj, wiki
-		$wiki = wrapper_array(4);
-		$noun = wrapper_array(5);
-		$adj = wrapper_array(6);
+		$fname = (rand(1) > $FEMALE_PCT) ? $fnamefs->next()  : $fnamefs->next();
 
 		if( $bInteractive ){
 			print sprintf("%-5s","[$i]");
@@ -170,12 +158,12 @@ sub printList{
 			case 4 {  $tStr = &colorwrap( $fname, 'magenta'). "-". &colorwrap($lname, 'blue') ; $tStr = lc($tStr)}
 			case 5 {  $tStr = &colorwrap( $fname, 'magenta'). "". &colorwrap($lname, 'blue') }
 			case 6 {  $tStr = &colorwrap( $fname, 'magenta'). "". &colorwrap($lname, 'blue') ; $tStr = lc($tStr)}
-			case 7 { $tStr = &colorwrap($wiki, 'green')}
-			case 8 {$tStr = &colorwrap( $wiki, 'green'). "". &colorwrap($wiki, 'yellow') ; $tStr = lc($tStr) }
-			case 9 { $tStr = &colorwrap( $wiki, 'green'). "". &colorwrap($wiki, 'yellow')  }
-			case 10 { $tStr = &colorwrap( $wiki, 'green'). "". &colorwrap($wiki, 'yellow') ; $tStr = lc($tStr)}
-			case 11 { $tStr = &colorwrap( $adj, 'green'). "". &colorwrap($noun, 'yellow') ;}
-			case 12 { $tStr = &colorwrap( $adj, 'green'). "". &colorwrap($lname, 'yellow') ; } 
+			case 7 { $tStr = &colorwrap($wiki->next(), 'green')}
+			case 8 {$tStr = &colorwrap( $wiki->next(), 'green'). "". &colorwrap($wiki->next(), 'yellow') ; $tStr = lc($tStr) }
+			case 9 { $tStr = &colorwrap( $wiki->next(), 'green'). "". &colorwrap($wiki->next(), 'yellow')  }
+			case 10 { $tStr = &colorwrap( $wiki->next(), 'green'). "". &colorwrap($wiki->next(), 'yellow') ; $tStr = lc($tStr)}
+			case 11 { $tStr = &colorwrap( $adj->next(), 'green'). "". &colorwrap($noun->next(), 'yellow') ;}
+			case 12 { $tStr = &colorwrap( $adj->next(), 'green'). "". &colorwrap($lname, 'yellow') ; } 
 			else {   $tStr = &colorwrap( $fname, 'magenta'). " ". &colorwrap($lname, 'blue')  } 
 		}
 
@@ -186,35 +174,6 @@ sub printList{
 		}
 
 	}
-}
-
-sub wrapper_array(){
-	switch($_[0]){
-		case 0 {
-			if(!$bSpeed) { return getrandom(\@lnames)} else { return $Llnames->next(); }
-		 }
-		case 1{
-			if(!$bSpeed) { return getrandom(\@fnamems) } else { return $Lfnamems->next(); }
-		 }
-		case 2 {
-			if(!$bSpeed) { return getrandom(\@fnamefs) } else { return $Lfnamefs->next(); }
-		 }
-		case 4{
-			if(!$bSpeed) { return getrandom(\@wikis) } else { return $Lwiki->next(); }
-		 }
-		case 4{
-			if(!$bSpeed) { return getrandom(\@nouns) } else { return $Lnoun->next(); }
-		 }
-		case 5{
-			if(!$bSpeed) { return getrandom(\@adjs) } else { return $Ladj->next(); }
-		 }
-	}
-}
-
-sub getrandom(){
-	@arr =\$_[0];
-	$ret = $_[0][int(rand($#arr+ 1))]; 
-	return $ret;
 }
 
 sub download{
@@ -228,11 +187,11 @@ sub download{
 }
 
 # from: https://github.com/carterpage/census-name-generator
+# now generated output files
 sub makeNameArray {
-	$file = $_[0];
-	my @names;
-	open(FILE, $file);
-	while(<FILE>) {
+	open(my $FILE, $_[0]) or die "Can't open '$_[0]': $!";;
+	open(my $OUTFILE,">", $_[1]);
+	while(<$FILE>) {
 		chomp;
 
 		# First column (1-15) is the name.  Format it.
@@ -246,22 +205,12 @@ sub makeNameArray {
 
 		# Add name to the array in a quantity relative to the % distribution.
 		for(my $i = 0 ; $i < $count ; ++$i) {
-			push(@names, $name);
+			print $OUTFILE "$name\n";
 		}
+
 	}
-	return @names;
+	close($OUTFILE);
+	close($FILE);
 }
 
 
-sub makeArrayFile{
-	$file = $_[0];
-	my @names;
-	open(FILE, $file);
-	while(<FILE>) {
-		chomp;
-
-		$name = $_;
-		push(@names, $name);
-	}
-	return @names;
-}
