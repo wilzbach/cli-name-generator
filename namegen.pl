@@ -32,7 +32,7 @@ my $bDownload = 0;
 my $bHelp= 0;
 my $bRandom= 0;
 my $bInteractive = 0;
-my $sShuffleMode ="0";
+my $sShuffleMode ="";
 my $bColorless = 0;
 
 GetOptions(
@@ -94,7 +94,7 @@ my $noun= File::RandomLine->new($NOUN_FILE);
 
 my @results;
 
-if($bRandom){
+if($bRandom or $sShuffleMode eq ""){
 	$sShuffleMode = ""; 
 	for($i=0; $i < 13; $i++){
 		$sShuffleMode= $sShuffleMode . " " . $i;
