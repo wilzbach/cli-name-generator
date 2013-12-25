@@ -1,4 +1,3 @@
-#!/usr/bin/env perl
 
 use warnings;
 use LWP::Simple;
@@ -10,6 +9,7 @@ use File::Path qw(make_path);
 use Getopt::Long;
 use Switch;
 use Term::ANSIColor;
+use String::Util 'trim'; 
 
 # File::RandomLine must be installed!
 $WIKTIONARY_URL = "http://dumps.wikimedia.org/enwiktionary/20131217/enwiktionary-20131217-all-titles.gz";
@@ -32,11 +32,11 @@ my $bDownload = 0;
 my $bHelp= 0;
 my $bRandom= 0;
 my $bInteractive = 0;
-my $iShuffleMode =0;
+my $sShuffleMode ="0";
 my $bColorless = 0;
 
 GetOptions(
-	'mode=i' => \$iShuffleMode,
+	'mode=s' => \$sShuffleMode,
 	'download!' => \$bDownload,
 	'random!'     => \$bRandom,
 	'interactive!'     => \$bInteractive,
@@ -69,7 +69,7 @@ if ($bDownload) {
 	#system("cat $LAST_NAME_FILE".".raw | cut -f 1 -d ' ' | tr '[:upper:]' '[:lower:]'  | awk '{ print toupper(substr(\$0, 1, 1)) substr(\$0, 2) }'> $LAST_NAME_FILE");
 	#system("cat $MALE_FIRST_NAME_FILE".".raw | cut -f 1 -d ' ' | tr '[:upper:]' '[:lower:]' | awk '{ print toupper(substr(\$0, 1, 1)) substr(\$0, 2) }'  > $MALE_FIRST_NAME_FILE");
 	#system("cat $FEMALE_FIRST_NAME_FILE".".raw | cut -f 1 -d ' ' | tr '[:upper:]' '[:lower:]' | awk '{ print toupper(substr(\$0, 1, 1)) substr(\$0, 2) }'> $FEMALE_FIRST_NAME_FILE");
-	
+
 	makeNameArray($LAST_NAME_FILE.".raw", $LAST_NAME_FILE);
 	makeNameArray($FEMALE_FIRST_NAME_FILE.".raw", $FEMALE_FIRST_NAME_FILE);
 	makeNameArray($MALE_FIRST_NAME_FILE.".raw", $MALE_FIRST_NAME_FILE);
@@ -93,6 +93,18 @@ my $noun= File::RandomLine->new($NOUN_FILE);
 
 
 my @results;
+
+if($bRandom){
+	$sShuffleMode = ""; 
+	for($i=0; $i < 13; $i++){
+		$sShuffleMode= $sShuffleMode . " " . $i;
+	}
+}
+@shuffleModes = split(" ", trim($sShuffleMode));
+for($i=0; $i< scalar @shuffleModes; $i++){
+	$shuffleModes[$i] =int($shuffleModes[$i]);
+}
+$upper = scalar @shuffleModes ;
 
 if($bInteractive){
 	while( 1){
@@ -133,7 +145,7 @@ sub colorwrap(){
 
 sub printList{
 	for($i = 0 ; $i < $num_names; ++$i) {
-			# Last name
+		# Last name
 		$lname = $lnames->next(); 
 
 		# Male or female?
@@ -143,11 +155,10 @@ sub printList{
 			print sprintf("%-5s","[$i]");
 		}
 
-		if($bRandom){
-			# do not include modes with whitespace
-			$max = 10-1;
-			$iShuffleMode = int(rand($max))+1;
-		}
+		# [0,upper[
+		$pos = int(rand($upper));
+		$iShuffleMode = $shuffleModes[$pos] ;
+
 		switch($iShuffleMode){
 			case 1 { $tStr = &colorwrap( $fname, 'magenta'). ".". &colorwrap($lname, 'blue')}
 			case 2 { $tStr = &colorwrap( $fname, 'magenta'). ".". &colorwrap($lname, 'blue') ;$tStr = lc($tStr)}
