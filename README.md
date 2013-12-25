@@ -23,7 +23,7 @@ namengen.pl -d 1
 Usage: namegen.pl <# of names>
 -m 	select mode
 -d 	download the database
--i 	interactive mode
+-i 	interactive mode (array is possible, seperate with spaces)
 -r 	randomly select a mode
 ```
 
@@ -73,6 +73,8 @@ q    quit
 | 8    | word       |
 | 9    | Word.Word  |
 | 10   | word.word  |
+| 11   | adjnoun    |
+| 12   | adjfirst   |
 
 To be continued.
 
