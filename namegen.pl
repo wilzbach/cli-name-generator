@@ -24,7 +24,7 @@ $MALE_FIRST_NAME_FILE = $FindBin::Bin ."/db/fnamem.dat";
 $WIKTIONARY_NAME_FILE = $FindBin::Bin . "/db/enwiktionary-all-titles.filtered";
 $ADJECTIVE_FILE= $FindBin::Bin . "/db-own/adjectives.txt";
 $NOUN_FILE= $FindBin::Bin . "/db-own/nouns2.txt";
-make_path("db");
+make_path($FindBin::Bin. "/db");
 
 $FEMALE_PCT = 0.5; # 50%
 
