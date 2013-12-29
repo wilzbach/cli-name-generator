@@ -123,7 +123,7 @@ if($bInteractive){
 				print "\n";
 				last;
 			}
-			if( $userword ge 0 and $userword lt scalar @results){
+			if( $userword ge 0 and $userword lt @results){
 				#Clipboard->copy($results[$userword]);
 				system("echo -n  $results[$userword] | xsel -b");
 				print "$results[$userword] copied to clipboard\n"; 
