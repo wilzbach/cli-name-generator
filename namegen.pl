@@ -123,7 +123,7 @@ if($bInteractive){
 				print "\n";
 				last;
 			}
-			if( $userword ge 0 and $userword lt @results){
+			if( (0+$userword) != 0 and (0+$userword) < scalar(@results)){
 				#Clipboard->copy($results[$userword]);
 				# remove ansi color
 				$line = $results[$userword];
@@ -132,6 +132,8 @@ if($bInteractive){
 				print "$results[$userword] copied to clipboard\n"; 
 				exit 0;
 			}
+		
+			print "Invalid number \n";
 		}
 	}
 }else{
