@@ -152,7 +152,7 @@ sub printList{
 		$lname = $lnames->next(); 
 
 		# Male or female?
-		$fname = (rand(1) > $FEMALE_PCT) ? $fnamefs->next()  : $fnamefs->next();
+		$fname = (rand(1) > $FEMALE_PCT) ? $fnamefs->next()  : $fnamems->next();
 
 		if( $bInteractive ){
 			print sprintf("%-5s","[$i]");
