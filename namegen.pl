@@ -125,7 +125,10 @@ if($bInteractive){
 			}
 			if( $userword ge 0 and $userword lt @results){
 				#Clipboard->copy($results[$userword]);
-				system("echo -n  $results[$userword] | xsel -b");
+				# remove ansi color
+				$line = $results[$userword];
+				$line =~ s/\e\[\d+m//g;
+				system("echo -n  $line | xsel -b");
 				print "$results[$userword] copied to clipboard\n"; 
 				exit 0;
 			}
