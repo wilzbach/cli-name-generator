@@ -78,6 +78,15 @@ q    quit
 
 To be continued.
 
+## Aliases 
+
+I use the following aliases for quick access of the most important functions: name generation and username generation.
+
+```
+alias namegen="usergen -m 0"
+alias usergen="usergen -m '11 12'"
+```
+
 ## History
 
 This is a total rewrite of https://github.com/carterpage/census-name-generator
