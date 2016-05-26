@@ -23,7 +23,7 @@ namengen.pl -d 1
 Usage: namegen.pl <# of names>
 -m 	select mode
 -d 	download the database
--i 	interactive mode (array is possible, seperate with spaces)
+-i 	interactive mode (array is possible, separate with spaces)
 -r 	randomly select a mode
 ```
 
